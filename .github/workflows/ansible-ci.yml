@@ -2,6 +2,11 @@ name: Ansible CI
 
 on:
   workflow_call:
+    inputs:
+      scenario:
+        required: true
+        type: string
+        default: default
 
 jobs:
   molecule:
@@ -25,7 +30,7 @@ jobs:
             molecule[docker]
 
       - name: Run tests
-        run: molecule test
+        run: molecule test -s ${{ inputs.scenario }}
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
