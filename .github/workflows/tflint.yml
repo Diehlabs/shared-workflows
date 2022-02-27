@@ -1,4 +1,4 @@
-name: Terraform Module Build
+name: tflint
 on:
   workflow_call:
 
