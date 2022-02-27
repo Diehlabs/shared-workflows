@@ -5,7 +5,7 @@ on:
       directory:
         required: false
         type: string
-        default: ${{ env.GITHUB_WORKSPACE }}
+        default: ${{ github.workspace }}
 
 jobs:
   checkov:
