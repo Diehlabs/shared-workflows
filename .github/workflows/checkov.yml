@@ -5,7 +5,7 @@ on:
       directory:
         required: false
         type: string
-        default: '.'
+        default: ${{ env.GITHUB_WORKSPACE }}
 
 jobs:
   checkov:
@@ -29,4 +29,4 @@ jobs:
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: results.sarif
+          sarif_file: ${{ inputs.directory }}/results.sarif
