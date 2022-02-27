@@ -1,11 +1,5 @@
 name: Terraform Module Build
 on:
-  push:
-    branches:
-      - '**'
-  pull_request:
-    branches:
-      - 'main'
   workflow_dispatch:
 
 env:
@@ -14,29 +8,29 @@ env:
 
 jobs:
   tflint:
-    uses: ./.github/workflows/tflint.yml@main
+    uses: ./.github/workflows/tflint.yml
 
   terrascan:
-    uses: ./.github/workflows/terrascan.yml@main
+    uses: ./.github/workflows/terrascan.yml
     with:
       directory: '/examples/build'
     needs: tflint
     if: success()
 
   checkov:
-    uses: ./.github/workflows/checkov.yml@main
+    uses: ./.github/workflows/checkov.yml
     with:
       directory: '/examples/build'
     needs: tflint
     if: success()
 
   terratest:
-    uses: ./.github/workflows/terratest.yml@main
+    uses: ./.github/workflows/terratest.yml
     needs: tflint
     if: success()
 
   tag:
-    uses: ./.github/workflows/github-release.yml@main
+    uses: ./.github/workflows/github-release.yml
     needs:
       - terratest
       - checkov
