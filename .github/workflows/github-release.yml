@@ -1,6 +1,8 @@
 name: Github Release
 on:
   workflow_call:
+    branches:
+      - main
   push:
     branches:
       - main

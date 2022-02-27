@@ -1,6 +1,11 @@
 name: terrascan
 on:
   workflow_call:
+    inputs:
+      directory:
+        required: false
+        type: string
+        default: '.'
 
 jobs:
   terrascan:
@@ -9,6 +14,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+
       # https://github.com/marketplace/actions/terrascan-iac-scanner
     - name: Run Terrascan
       id: terrascan
@@ -21,7 +27,7 @@ jobs:
         verbose: true
         sarif_upload: true
         #non_recursive:
-        iac_dir: /
+        iac_dir: ${{ inputs.directory }}
         #policy_path:
         #skip_rules:
         #config_path:
