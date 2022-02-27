@@ -28,10 +28,3 @@ jobs:
     uses: ./.github/workflows/terratest.yml
     needs: tflint
     if: success()
-
-  tag:
-    uses: ./.github/workflows/github-release.yml
-    needs:
-      - terratest
-      - checkov
-    if: success()
