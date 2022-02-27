@@ -2,7 +2,7 @@ name: checkov
 on:
   workflow_call:
 
-jobs:  
+jobs:
   checkov:
     runs-on: ubuntu-latest
     name: checkov-action
