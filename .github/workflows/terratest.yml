@@ -2,7 +2,7 @@ name: terratest
 on:
   workflow_call:
     inputs:
-      directory:
+      timeout:
         required: false
         type: string
         default: 15m
