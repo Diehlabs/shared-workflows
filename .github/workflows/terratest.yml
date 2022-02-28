@@ -1,6 +1,24 @@
 name: terratest
 on:
   workflow_call:
+    inputs:
+      directory:
+        required: false
+        type: string
+        default: 15m
+    secrets:
+      TE_APPROLE_ID:
+        required: false
+      TE_SECRET_ID:
+        required: false
+      ARM_CLIENT_ID:
+         required: false
+      ARM_CLIENT_SECRET:
+         required: false
+      ARM_TENANT_ID:
+         required: false
+      ARM_SUBSCRIPTION_ID:
+         required: false
 
 jobs:
   terratest:
@@ -26,4 +44,30 @@ jobs:
 
     - name: Test
       working-directory: test
-      run: go test -v
+      run: go test -v -timeout ${{ inputs.timeout }} | tee ${ runner_temp }/terrattest.log
+      env:
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+        ARM_CLIENT_SECRET:  ${{ secrets.ARM_CLIENT_SECRET }}
+        ARM_TENANT_ID:  ${{ secrets.ARM_TENANT_ID }}
+        ARM_SUBSCRIPTION_ID:  ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+    - name: Download Terratest Log Parser
+      run: |
+        TLP_URL=$(curl https://api.github.com/repos/gruntwork-io/terratest/releases/latest -k -s | jq -r '.assets[] | select(.name == "terratest_log_parser_linux_amd64").browser_download_url')
+        curl \
+          --silent \
+          --location \
+          --fail \
+          --show-error \
+          -o ${ runner_temp }/terratest_log_parser "$TLP_URL"
+        chmod +x ${ runner_temp }/terratest_log_parser
+
+    - name: Generate JUnit report
+      run: |
+        ${ runner_temp }/terratest_log_parser -testlog ${ runner_temp }/terrattest.log -outputdir ${ runner_temp }
+
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      if: always()
+      with:
+        files: ${ runner_temp }/report.xml
