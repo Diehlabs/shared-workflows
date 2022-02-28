@@ -1,5 +1,6 @@
 name: terratest
 on:
+  workflow_dispatch: # leave this here so other repos can run manually?
   workflow_call:
     inputs:
       timeout:
