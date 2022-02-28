@@ -66,6 +66,7 @@ jobs:
     - name: Generate JUnit report
       run: |
         ${{ runner.temp }}/terratest_log_parser -testlog ${{ runner.temp }}/test_output.log -outputdir test_output
+        cat test_output/test_output.log
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
