@@ -44,7 +44,7 @@ jobs:
 
     - name: Test
       working-directory: test
-      run: go test -v -timeout ${{ inputs.timeout }} | tee ${ runner.temp }/terrattest.log
+      run: go test -v -timeout ${{ inputs.timeout }} | tee ${{{ runner.temp }}}/terrattest.log
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
         ARM_CLIENT_SECRET:  ${{ secrets.ARM_CLIENT_SECRET }}
@@ -59,15 +59,15 @@ jobs:
           --location \
           --fail \
           --show-error \
-          -o ${ runner.temp }/terratest_log_parser "$TLP_URL"
-        chmod +x ${ runner.temp }/terratest_log_parser
+          -o ${{ runner.temp }}/terratest_log_parser "$TLP_URL"
+        chmod +x ${{ runner.temp }}/terratest_log_parser
 
     - name: Generate JUnit report
       run: |
-        ${ runner.temp }/terratest_log_parser -testlog ${ runner.temp }/terrattest.log -outputdir ${ runner.temp }
+        ${{ runner.temp }}/terratest_log_parser -testlog ${{ runner.temp }}/terrattest.log -outputdir ${{ runner.temp }}
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: always()
       with:
-        files: ${ runner.temp }/report.xml
+        files: ${{ runner.temp }}/report.xml
