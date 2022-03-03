@@ -25,6 +25,8 @@ jobs:
   terratest:
     runs-on: ubuntu-latest
     name: terratest-action
+    env:
+      TF_CLI_ARGS: -no-color
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -64,12 +66,13 @@ jobs:
         chmod +x ${{ runner.temp }}/terratest_log_parser
 
     - name: Generate JUnit report
+      if: always()
       run: |
-        ${{ runner.temp }}/terratest_log_parser -testlog ${{ runner.temp }}/test_output.log -outputdir ${{ runner.temp }}/test-results
+        ${{ runner.temp }}/terratest_log_parser -testlog ${{ runner.temp }}/test_output.log -outputdir test-results
         cat test-results/report.xml
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: always()
       with:
-        files: ${{ runner.temp }}/test-results/report.xml
+        files: $ test-results/**/*.xml
