@@ -65,11 +65,11 @@ jobs:
 
     - name: Generate JUnit report
       run: |
-        ${{ runner.temp }}/terratest_log_parser -testlog ${{ runner.temp }}/test_output.log -outputdir test-results
+        ${{ runner.temp }}/terratest_log_parser -testlog ${{ runner.temp }}/test_output.log -outputdir ${{ runner.temp }}/test-results
         cat test-results/report.xml
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: always()
       with:
-        files: ${{ env.GITHUB_WORKSPACE }}/test-results/report.xml
+        files: ${{ runner.temp }}/test-results/report.xml
