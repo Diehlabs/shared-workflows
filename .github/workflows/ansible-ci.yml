@@ -7,7 +7,7 @@ on:
         required: false
         type: string
         default: default
-      ansible_vesion:
+      ansible_version:
         required: false
         type: string
         default: '5.2.0'
