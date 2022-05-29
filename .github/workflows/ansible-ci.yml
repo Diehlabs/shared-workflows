@@ -7,6 +7,14 @@ on:
         required: false
         type: string
         default: default
+      ansible_vesion:
+        required: false
+        type: string
+        default: '5.2.0'
+      ansible_lint_version:
+        required: false
+        type: string
+        default: '5.3.2'
 
 jobs:
   molecule:
@@ -24,8 +32,8 @@ jobs:
       - name: Install CI deps
         run: |
           pip3 install \
-            ansible \
-            ansible-lint \
+            ansible==${{ inputs.ansible_version }}\
+            ansible-lint==${{ inputs.ansible_lint_version }}\
             docker \
             molecule[docker]
 
