@@ -37,9 +37,10 @@ jobs:
       - name: Install CI deps
         run: |
           pip3 install \
-            ansible==${{ inputs.ansible_version }}\
-            ansible-lint==${{ inputs.ansible_lint_version }}\
+            ansible==${{ inputs.ansible_version }} \
+            ansible-lint==${{ inputs.ansible_lint_version }} \
             docker \
+            molecule==${{ inputs.molecule_version }} \
             molecule[docker]
 
       - name: Run tests
