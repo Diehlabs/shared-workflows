@@ -43,7 +43,9 @@ jobs:
 
     - name: Test
       working-directory: test
-      run: go test -v -timeout ${{ inputs.timeout }} | tee ${{ runner.temp }}/test_output.log
+      run: |
+        printenv | sort
+        go test -v -timeout ${{ inputs.timeout }} | tee ${{ runner.temp }}/test_output.log
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
         ARM_CLIENT_SECRET:  ${{ secrets.ARM_CLIENT_SECRET }}
