@@ -63,6 +63,7 @@ jobs:
 
         echo $MY_OUTPUT | jq -C .
         unzip "${RUNNER_TEMP}/terraform.zip" &&\
+        ls -la ${RUNNER_TEMP} &&\
         chmod +x "${RUNNER_TEMP}/terraform" &&\
         rm "${RUNNER_TEMP}/terraform.zip"
 
