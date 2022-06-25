@@ -72,7 +72,7 @@ jobs:
       with:
         go-version: 1.18
 
-    - name: Test
+    - name: Execute Terratest
       working-directory: test
       run: |
         printenv | sort
