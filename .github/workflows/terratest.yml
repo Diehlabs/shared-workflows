@@ -80,8 +80,10 @@ jobs:
         ARM_TENANT_ID:  ${{ secrets.ARM_TENANT_ID }}
         ARM_SUBSCRIPTION_ID:  ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
-    - name: Download Terratest Log Parser
+    - name: Generate Test Results
+      if: always()
       run: |
+        echo "Download Terratest Log Parser - START"
         TLP_URL=$(curl https://api.github.com/repos/gruntwork-io/terratest/releases/latest -k -s | jq -r '.assets[] | select(.name == "terratest_log_parser_linux_amd64").browser_download_url')
         curl \
           --silent \
@@ -90,12 +92,12 @@ jobs:
           --show-error \
           -o ${{ runner.temp }}/terratest_log_parser "$TLP_URL"
         chmod +x ${{ runner.temp }}/terratest_log_parser
+        echo "Download Terratest Log Parser - END"
 
-    - name: Generate JUnit report
-      if: always()
-      run: |
+        echo "Generate JUnit report - START"
         ${{ runner.temp }}/terratest_log_parser -testlog ${{ runner.temp }}/test_output.log -outputdir test-results
         cat test-results/report.xml
+        echo "Generate JUnit report - END"
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
