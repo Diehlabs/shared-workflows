@@ -62,10 +62,10 @@ jobs:
         ${TF_DL_URL})
 
         echo $MY_OUTPUT | jq -C .
-        unzip "${RUNNER_TEMP}/terraform.zip" &&\
-        ls -la ${RUNNER_TEMP} &&\
-        chmod +x "${RUNNER_TEMP}/terraform" &&\
-        rm "${RUNNER_TEMP}/terraform.zip"
+
+        cd "$RUNNER_TEMP"
+        unzip ./terraform.zip &&\
+        chmod +x ./terraform
 
     - name: Set up Go
       uses: actions/setup-go@v2
