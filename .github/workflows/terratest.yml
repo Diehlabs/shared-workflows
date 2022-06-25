@@ -45,11 +45,13 @@ jobs:
             echo "TERRAFORM_VERSION variable is set: ${TERRAFORM_VERSION}"
             echo "This repository requires Terraform version ${TERRAFORM_VERSION}"
         else
-            err_msg="TERRAFORM_VERSION variable is not set!"
+            err_msg=" variable is not set!"
             echo "You MUST include a TERRAFORM_VERSION variable in this pipeline!"
             echo ${err_msg}
             exit 1
         fi
+
+        TF_DL_URL="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
 
         echo "Terraform CLI version download URL:"
         echo "${TF_DL_URL}"
