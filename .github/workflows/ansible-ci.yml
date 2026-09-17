@@ -40,7 +40,8 @@ jobs:
             ansible==${{ inputs.ansible_version }}\
             ansible-lint==${{ inputs.ansible_lint_version }}\
             docker \
-            molecule[docker]
+            molecule \
+            molecule-plugins[docker]
 
       - name: Run tests
         run: molecule test -s ${{ inputs.scenario }}
