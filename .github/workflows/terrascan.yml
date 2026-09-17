@@ -13,7 +13,7 @@ jobs:
     name: terrascan-action
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v7.0.1
 
       # https://github.com/marketplace/actions/terrascan-iac-scanner
     - name: Run Terrascan
@@ -34,6 +34,6 @@ jobs:
         #find_vulnerabilities:
 
     - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v1
+      uses: github/codeql-action/upload-sarif@v4.38.0
       with:
         sarif_file: terrascan.sarif

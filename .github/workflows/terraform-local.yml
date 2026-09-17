@@ -16,8 +16,8 @@ jobs:
     name: Terraform Plan
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
-    - uses: hashicorp/setup-terraform@v1
+      uses: actions/checkout@v7.0.1
+    - uses: hashicorp/setup-terraform@v4.0.1
       with:
         terraform_version: ${{ inputs.tf_version }}
         cli_config_credentials_token: ${{ secrets.tfe_token }}
@@ -35,16 +35,14 @@ jobs:
 
     - name: Inspect plan results
       id: inspect
-      uses: actions/github-script@0.9.0
+      uses: actions/github-script@v9.0.0
       if: github.event_name == 'pull_request'
       env:
         PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-          #### Terraform Validation 🤖\`${{ steps.validate.outputs.stdout }}\`
+          const output = `#### Terraform Initialization ⚙️\`${{ steps.tf_init.outcome }}\`
           #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
 
           <details><summary>Show Plan</summary>
@@ -57,7 +55,7 @@ jobs:
 
           *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
-          github.issues.createComment({
+          github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,

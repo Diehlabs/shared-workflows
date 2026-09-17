@@ -7,14 +7,13 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Bump version and push tag
         id: tag_version
-        uses: mathieudutour/github-tag-action@v5.6
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-        if: github.ref == 'refs/heads/master'
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
