@@ -16,6 +16,10 @@ on:
         required: false
         type: string
         default: '5.3.2'
+      python_version:
+        required: false
+        type: string
+        default: '3.10'
 
 jobs:
   molecule:
@@ -28,7 +32,7 @@ jobs:
       - name: Setup Python 3
         uses: actions/setup-python@v7.0.0
         with:
-          python-version: '3.x'
+          python-version: ${{ inputs.python_version }}
 
       - name: Install CI deps
         run: |
