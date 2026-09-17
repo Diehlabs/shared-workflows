@@ -6,10 +6,10 @@ jobs:
   tflint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7.0.1
         name: Checkout source code
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v6.1.0
         name: Cache plugin dir
         with:
           path: ~/.tflint.d/plugins

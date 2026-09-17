@@ -33,7 +33,7 @@ jobs:
       TERRAFORM_VERSION: ${{ inputs.terraform_version }}
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v7.0.1
 
     # - uses: hashicorp/setup-terraform@v2
     #   with:
@@ -68,7 +68,7 @@ jobs:
         chmod +x ./terraform
 
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v7.0.0
       with:
         go-version: 1.18
 
