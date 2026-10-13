@@ -26,6 +26,8 @@ on:
 
 jobs:
   terratest:
+    # Feature-branch pushes are covered by the pull_request run; only run push CI on the default branch.
+    if: github.event_name != 'push' || github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     name: terratest-action
     env:
