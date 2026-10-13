@@ -79,10 +79,12 @@ jobs:
       run: |
         printenv | sort
         go test -v -timeout ${{ inputs.timeout }} | tee ${{ runner.temp }}/test_output.log
+        # capture immediately; any later command resets PIPESTATUS
+        rc=${PIPESTATUS[0]}
         # if terratest runs, but tests fail, the exit code is 1
-        echo "go test exit code: ${PIPESTATUS[0]}"
-        if [ "${PIPESTATUS[0]}" != "1" ]; then
-          exit "${PIPESTATUS[0]}"
+        echo "go test exit code: ${rc}"
+        if [ "${rc}" != "1" ]; then
+          exit "${rc}"
         else
           exit 0
         fi
