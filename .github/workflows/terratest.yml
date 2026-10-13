@@ -68,6 +68,7 @@ jobs:
         cd "$RUNNER_TEMP"
         unzip ./terraform.zip &&\
         chmod +x ./terraform
+        echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
 
     - name: Set up Go
       uses: actions/setup-go@v7.0.0
