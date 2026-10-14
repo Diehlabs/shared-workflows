@@ -21,12 +21,17 @@ jobs:
         name: Setup TFLint
         with:
           tflint_version: ${{ env.TFLINT_VERSION }}
+          github_token: ${{ github.token }}
 
       - name: Show version
         run: tflint --version
 
       - name: Init TFLint
         run: tflint --init
+        env:
+          # Authenticated plugin downloads; anonymous GitHub API calls from
+          # shared runner IPs regularly hit the 60/hr rate limit.
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Run TFLint
         run: tflint -f compact
