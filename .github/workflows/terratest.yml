@@ -116,7 +116,7 @@ jobs:
         echo "Generate JUnit report - END"
 
     - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1
+      uses: EnricoMi/publish-unit-test-result-action@7622c5bf3d112a72ab4fa3951c2aa5723d8ab92d # v2
       if: always()
       with:
         files: test-results/**/*.xml
