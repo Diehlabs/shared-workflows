@@ -1,0 +1,76 @@
+name: terraform-module
+# Standard CI for Diehlabs terraform-* module repos:
+# tflint -> checkov + terratest -> release on default-branch push.
+on:
+  workflow_call:
+    inputs:
+      terraform_version:
+        description: Terraform CLI version used by terratest
+        required: true
+        type: string
+      tflint_version:
+        description: TFLint version; empty uses the latest release
+        required: false
+        type: string
+        default: ""
+      terratest:
+        description: Run terratest; disable for modules whose tests need cloud credentials
+        required: false
+        type: boolean
+        default: true
+      test_directory:
+        description: Directory containing the Go tests and go.mod
+        required: false
+        type: string
+        default: test
+      timeout:
+        description: go test timeout
+        required: false
+        type: string
+        default: 15m
+      checkov_directory:
+        description: Directory for checkov to scan, relative to the repo root
+        required: false
+        type: string
+        default: "."
+
+jobs:
+  tflint:
+    uses: ./.github/workflows/tflint.yml
+    with:
+      tflint_version: ${{ inputs.tflint_version }}
+
+  checkov:
+    needs: tflint
+    permissions:
+      contents: read
+      security-events: write
+    uses: ./.github/workflows/checkov.yml
+    with:
+      directory: ${{ inputs.checkov_directory }}
+
+  terratest:
+    needs: tflint
+    if: inputs.terratest
+    permissions:
+      contents: read
+      checks: write
+    uses: ./.github/workflows/terratest.yml
+    with:
+      terraform_version: ${{ inputs.terraform_version }}
+      working_directory: ${{ inputs.test_directory }}
+      timeout: ${{ inputs.timeout }}
+    secrets: inherit
+
+  release:
+    needs: [tflint, checkov, terratest]
+    # terratest may be skipped (disabled); release as long as nothing failed
+    if: >-
+      always()
+      && github.event_name == 'push'
+      && github.ref_name == github.event.repository.default_branch
+      && !contains(needs.*.result, 'failure')
+      && !contains(needs.*.result, 'cancelled')
+    permissions:
+      contents: write
+    uses: ./.github/workflows/github-release.yml
