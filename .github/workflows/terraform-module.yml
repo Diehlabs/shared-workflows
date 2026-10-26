@@ -5,9 +5,10 @@ on:
   workflow_call:
     inputs:
       terraform_version:
-        description: Terraform CLI version used by terratest
-        required: true
+        description: Terraform CLI version used by terratest (required when terratest is enabled)
+        required: false
         type: string
+        default: ""
       tflint_version:
         description: TFLint version; empty uses the latest release
         required: false
