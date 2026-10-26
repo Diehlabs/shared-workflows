@@ -10,6 +10,16 @@ on:
       terraform_version:
         required: true
         type: string
+      working_directory:
+        description: Directory containing the Go tests and go.mod
+        required: false
+        type: string
+        default: test
+      go_version:
+        description: Go version override; empty reads it from <working_directory>/go.mod
+        required: false
+        type: string
+        default: ""
     secrets:
       TE_APPROLE_ID:
         required: false
@@ -30,6 +40,9 @@ jobs:
     if: github.event_name != 'push' || github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     name: terratest-action
+    permissions:
+      contents: read
+      checks: write
     env:
       TF_CLI_ARGS: -no-color
       TERRAFORM_VERSION: ${{ inputs.terraform_version }}
@@ -73,22 +86,19 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v7.0.0
       with:
-        go-version: 1.18
+        go-version: ${{ inputs.go_version }}
+        go-version-file: ${{ inputs.working_directory }}/go.mod
+        cache-dependency-path: ${{ inputs.working_directory }}/go.sum
 
     - name: Execute Terratest
-      working-directory: test
+      working-directory: ${{ inputs.working_directory }}
       run: |
         printenv | sort
         go test -v -timeout ${{ inputs.timeout }} | tee ${{ runner.temp }}/test_output.log
         # capture immediately; any later command resets PIPESTATUS
         rc=${PIPESTATUS[0]}
-        # if terratest runs, but tests fail, the exit code is 1
         echo "go test exit code: ${rc}"
-        if [ "${rc}" != "1" ]; then
-          exit "${rc}"
-        else
-          exit 0
-        fi
+        exit "${rc}"
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
         ARM_CLIENT_SECRET:  ${{ secrets.ARM_CLIENT_SECRET }}
@@ -116,7 +126,8 @@ jobs:
         echo "Generate JUnit report - END"
 
     - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v1
+      uses: EnricoMi/publish-unit-test-result-action@v2.25.0
       if: always()
       with:
         files: test-results/**/*.xml
+        comment_mode: "off"
