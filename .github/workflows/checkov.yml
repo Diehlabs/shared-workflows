@@ -3,8 +3,10 @@ on:
   workflow_call:
     inputs:
       directory:
-        required: true
+        description: Directory to scan, relative to the repo root
+        required: false
         type: string
+        default: "."
 
 jobs:
   checkov:
@@ -16,11 +18,22 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v7.0.1
 
+      # checkov-action runs in a container with the workspace as cwd, so
+      # convert runner paths (callers passing github.workspace) to relative
+      - name: Resolve scan directory
+        id: dir
+        env:
+          DIR: ${{ inputs.directory }}
+        run: |
+          d="${DIR#"$GITHUB_WORKSPACE"}"
+          d="${d#/}"
+          echo "dir=./${d}" >> "$GITHUB_OUTPUT"
+
       - name: Run Checkov action
         id: checkov
         uses: bridgecrewio/checkov-action@c3e106d5f8f4253a6de5110efb41a080f83db294 # v12.3135.0
         with:
-          directory: /
+          directory: ${{ steps.dir.outputs.dir }}
           soft_fail: true # optional: do not return an error code if there are failed checks
           framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
           output_format: sarif # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
