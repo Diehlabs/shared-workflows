@@ -48,7 +48,7 @@ jobs:
       TERRAFORM_VERSION: ${{ inputs.terraform_version }}
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v7.0.1
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     # - uses: hashicorp/setup-terraform@v2
     #   with:
@@ -84,7 +84,7 @@ jobs:
         echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
 
     - name: Set up Go
-      uses: actions/setup-go@v7.0.0
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
       with:
         go-version: ${{ inputs.go_version }}
         go-version-file: ${{ inputs.working_directory }}/go.mod
@@ -126,7 +126,7 @@ jobs:
         echo "Generate JUnit report - END"
 
     - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v2.25.0
+      uses: EnricoMi/publish-unit-test-result-action@7622c5bf3d112a72ab4fa3951c2aa5723d8ab92d # v2.25.0
       if: always()
       with:
         files: test-results/**/*.xml
