@@ -20,12 +20,12 @@ jobs:
       security-events: write
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v7.0.1
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # https://github.com/marketplace/actions/terrascan-iac-scanner
     - name: Run Terrascan
       id: terrascan
-      uses: accurics/terrascan-action@main
+      uses: accurics/terrascan-action@a4b0f7ec5fb3c4c66b8e76d824d958002f6ce12c # main
       with:
         iac_type: 'terraform'
         iac_version: 'v14'
@@ -41,6 +41,6 @@ jobs:
         #find_vulnerabilities:
 
     - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v4.38.0
+      uses: github/codeql-action/upload-sarif@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
       with:
         sarif_file: terrascan.sarif
